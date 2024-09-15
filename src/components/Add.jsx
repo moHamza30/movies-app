@@ -1,15 +1,12 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Movie from './MovieCards'
 const Add = () => {
     const [inputValue, setInputValue] = useState("")
     const [movies, setMovies]  = useState([])
 
-    // get movie when click Enter
-    const handleKeyDown = (e)=>{
-        if (e.key === "Enter"){
-            getMovie()
-        }
-    }
+    useEffect(()=>{
+        getMovie()
+    },[inputValue])
     const getMovie = ()=>{
         if(inputValue.trim()){
             fetch(`https://www.omdbapi.com/?s=${inputValue}&apikey=e028bec7`)
@@ -25,23 +22,20 @@ const Add = () => {
          <div className='flex flex-1'>
             <input
             placeholder='search for movie'
-            onKeyDown={handleKeyDown}
+            // onKeyDown={handleKeyDown}
             onChange={(e)=>setInputValue(e.target.value)}
             value={inputValue}
             className='border-2 w-full h-9 p-2'
              type="text" />
             </div>
-            <button 
-            onClick={()=>getMovie()}
-            className='py-2 px-4 bg-black text-white rounded-md'>search</button>
          </div>
     </div>
     {/* list of movies section */}
     <div className='container'>
     {movies.length > 0 && <ul>
         {
-            movies.map((item)=>(
-                <li>
+            movies.map((item,index)=>(
+                <li key={index}>
                     <Movie key={item.imdbID} movie={item}/>
                 </li>
             ))
